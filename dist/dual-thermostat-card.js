@@ -209,7 +209,7 @@ class DualThermostatCard extends LitElement {
       return merged;
     };
 
-    // Offscreen контейнер - карточки греются здесь пока card-mod не отработает
+    // Offscreen контейнер - карточки рендерятся здесь пока card-mod не отработает
     if (!this._offscreen) {
       this._offscreen = document.createElement("div");
       this._offscreen.style.cssText = "position:fixed;left:-9999px;top:-9999px;width:400px;visibility:hidden;pointer-events:none;";
@@ -328,7 +328,6 @@ class DualThermostatCard extends LitElement {
       border-radius: 24px 24px 0 0;
       flex: 1;
       opacity: 0;
-      /* Нет transition - появление мгновенное, без анимации поверх старых стилей */
     }
 
     .thermo-wrapper.visible {
@@ -509,7 +508,6 @@ class DualThermostatCard extends LitElement {
               "ha-outlined-icon-button": {
                 "$": outlinedButtonStyle
               }
-              // убрали first-child и last-of-type отсюда
             },
             "p.label.secondary ha-svg-icon": {
               "$": hideSecondaryIconStyle
@@ -531,10 +529,10 @@ class DualThermostatCard extends LitElement {
           "$": {
             ".buttons": {
               "ha-outlined-icon-button:first-child": {
-                "$": makeFirstButtonStyle(entity)  // - своя entity
+                "$": makeFirstButtonStyle(entity)
               },
               "ha-outlined-icon-button:last-of-type": {
-                "$": makeLastButtonStyle(entity)   // - своя entity
+                "$": makeLastButtonStyle(entity)
               }
             },
             "ha-control-circular-slider": {
@@ -638,8 +636,8 @@ class DualThermostatCard extends LitElement {
     if (this.active === index) return;
     this.active = index;
     this._visible = false;
-    this._expectedPower = null;   // ← сбрасываем ожидание предыдущего entity
-    this.updatePowerState();       // ← сразу обновляем кнопку
+    this._expectedPower = null;   // сбрасываем ожидание предыдущего entity
+    this.updatePowerState();       // сразу обновляем кнопку
 
     this.requestUpdate();
     this.updateComplete.then(() => {
