@@ -209,7 +209,7 @@ class DualThermostatCard extends LitElement {
       return merged;
     };
 
-    // Offscreen контейнер - карточки рендерятся здесь пока card-mod не отработает
+    // Offscreen контейнер - карточки греются здесь пока card-mod не отработает
     if (!this._offscreen) {
       this._offscreen = document.createElement("div");
       this._offscreen.style.cssText = "position:fixed;left:-9999px;top:-9999px;width:400px;visibility:hidden;pointer-events:none;";
@@ -328,6 +328,7 @@ class DualThermostatCard extends LitElement {
       border-radius: 24px 24px 0 0;
       flex: 1;
       opacity: 0;
+      /* Нет transition - появление мгновенное, без анимации поверх старых стилей */
     }
 
     .thermo-wrapper.visible {
@@ -508,6 +509,7 @@ class DualThermostatCard extends LitElement {
               "ha-outlined-icon-button": {
                 "$": outlinedButtonStyle
               }
+              // убрали first-child и last-of-type отсюда
             },
             "p.label.secondary ha-svg-icon": {
               "$": hideSecondaryIconStyle
@@ -529,10 +531,10 @@ class DualThermostatCard extends LitElement {
           "$": {
             ".buttons": {
               "ha-outlined-icon-button:first-child": {
-                "$": makeFirstButtonStyle(entity)
+                "$": makeFirstButtonStyle(entity)  // - своя entity
               },
               "ha-outlined-icon-button:last-of-type": {
-                "$": makeLastButtonStyle(entity)
+                "$": makeLastButtonStyle(entity)   // - своя entity
               }
             },
             "ha-control-circular-slider": {
@@ -636,8 +638,8 @@ class DualThermostatCard extends LitElement {
     if (this.active === index) return;
     this.active = index;
     this._visible = false;
-    this._expectedPower = null;   // сбрасываем ожидание предыдущего entity
-    this.updatePowerState();       // сразу обновляем кнопку
+    this._expectedPower = null;   // ← сбрасываем ожидание предыдущего entity
+    this.updatePowerState();       // ← сразу обновляем кнопку
 
     this.requestUpdate();
     this.updateComplete.then(() => {
@@ -768,9 +770,9 @@ class DualThermostatCardEditor extends LitElement {
   setConfig(config) {
     this._config = {
       entity1: "",
-      name1: "Тёплый пол",
+      name1: "",
       entity2: "",
-      name2: "Кондиционер",
+      name2: "",
       power_icon: "/local/images/power.png",
       heat_icon: "/local/images/heat.png",
       cool_icon: "/local/images/cool.png",
@@ -891,9 +893,9 @@ DualThermostatCard.getConfigElement = () => document.createElement("dual-thermos
 
 DualThermostatCard.getStubConfig = () => ({
   entity1: "",
-  name1: "Тёплый пол",
+  name1: "",
   entity2: "",
-  name2: "Кондиционер",
+  name2: "",
   power_icon: "/local/images/power.png",
   heat_icon: "/local/images/heat.png",
   cool_icon: "/local/images/cool.png",
@@ -909,6 +911,6 @@ window.customCards.push({
   name: "Dual Thermostat Card",
   description: "Два термостата с переключателем режимов",
   preview: true,
-  // -- Ключевое поле: без него HA не знает какой элемент открывать в редакторе
+  // Ключевое поле: без него HA не знает какой элемент открывать в редакторе
   documentationURL: "https://github.com/",
 });
